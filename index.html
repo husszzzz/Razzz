@@ -1,2 +1,195 @@
-l<a href="itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/husszzzz/coomCraft/main/install.plist" class="main-btn">تثبيت E-Sign الآن</a>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HASSANY STORE | تثبيت E-Sign</title>
+    <style>
+        :root {
+            --primary: #007aff;
+            --bg: #0a0a0c;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text: #ffffff;
+        }
 
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* خلفية متحركة خفيفة */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            filter: blur(150px);
+            border-radius: 50%;
+            z-index: -1;
+            top: 20%;
+            left: 10%;
+            opacity: 0.3;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .app-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .app-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #007aff, #00c6ff);
+            border-radius: 22px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,122,255,0.4);
+        }
+
+        h1 { font-size: 24px; margin-bottom: 5px; }
+        p { color: #86868b; font-size: 14px; margin-bottom: 30px; }
+
+        .install-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .install-btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+        }
+
+        .install-btn:active { transform: scale(0.95); }
+
+        /* دائرة التحميل */
+        .loader-ring {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .timer-display {
+            display: none;
+            font-size: 16px;
+            margin-top: 15px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #444;
+        }
+
+        .footer b { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="app-card">
+            <div class="app-icon">ES</div>
+            <h1>E-Sign Hassany</h1>
+            <p>أحدث نسخة معدلة وموقعة بشهادة مؤسسة</p>
+            
+            <button class="install-btn" id="mainBtn" onclick="startProcess()">تثبيت الآن</button>
+            
+            <div class="timer-display" id="timerZone">
+                جاري التجهيز... <span id="seconds">5</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            Developed by <b>HASSANY</b> &copy; 2026
+        </div>
+    </div>
+
+    <audio id="downloadSound">
+        <source src="https://www.soundjay.com/buttons/sounds/button-3.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function startProcess() {
+            const btn = document.getElementById('mainBtn');
+            const timerZone = document.getElementById('timerZone');
+            const secondsSpan = document.getElementById('seconds');
+            const sound = document.getElementById('downloadSound');
+            let count = 5;
+
+            // 1. تغيير حالة الزر
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loader-ring" style="display:block"></div>';
+            timerZone.style.display = 'block';
+
+            // 2. تشغيل صوت البداية
+            sound.play();
+
+            // 3. المؤقت
+            const countdown = setInterval(() => {
+                count--;
+                secondsSpan.innerText = count;
+
+                if (count <= 0) {
+                    clearInterval(countdown);
+                    executeDownload();
+                }
+            }, 1000);
+        }
+
+        function executeDownload() {
+            const btn = document.getElementById('mainBtn');
+            const timerZone = document.getElementById('timerZone');
+            
+            // رابط الـ itms-services الخاص بك
+            const installUrl = "itms-services://?action=download-manifest&url=https://github.com/sanjivanikaluste1-ctrl/ipa-host/releases/download/v11/87d33a6a-e96b-41aa-ada9-4eb15c5d1e38.plist";
+            
+            window.location.href = installUrl;
+
+            // إعادة شكل الزر
+            btn.innerHTML = "بدأ التثبيت...";
+            timerZone.innerHTML = "افحص الشاشة الرئيسية الآن ✅";
+        }
+    </script>
+</body>
+</html>
