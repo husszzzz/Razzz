@@ -3,258 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HASSANY STORE</title>
+    <title>HASSANY STORE | المتجر الرسمي</title>
     <style>
         :root {
-            --primary: #007aff;
-            --bg: #0a0a0c;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text: #ffffff;
-            --telegram: #0088cc;
+            --accent: #00d2ff;
+            --accent-secondary: #3a7bd5;
+            --bg-dark: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
-            margin: 0;
-            overflow-x: hidden;
+            padding: 30px 15px;
+            min-height: 100vh;
+            line-height: 1.6;
         }
 
-        /* الإضاءة الخلفية */
-        body::before {
-            content: "";
+        /* تأثير الإضاءة العائمة */
+        .glow-bg {
             position: fixed;
-            width: 400px;
-            height: 400px;
-            background: var(--primary);
-            filter: blur(180px);
-            border-radius: 50%;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 20%, rgba(0, 210, 255, 0.15), transparent 50%);
+            pointer-events: none;
             z-index: -1;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0.25;
         }
 
         .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 450px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
         }
 
-        /* تصميم البطاقات الزجاجية */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            padding: 30px 20px;
+        /* الهيدر */
+        .header {
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            padding: 20px 0;
         }
 
-        /* --- قسم التطبيق --- */
-        .app-icon {
-            width: 90px;
-            height: 90px;
-            background: linear-gradient(135deg, #007aff, #00c6ff);
+        .header h1 {
+            font-size: 28px;
+            letter-spacing: 2px;
+            background: linear-gradient(to bottom, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        /* البطاقات المطورة */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* أيقونة التطبيق بتأثير ثلاثي الأبعاد */
+        .app-box {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
             border-radius: 22px;
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 35px;
-            font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0,122,255,0.3);
+            font-size: 32px;
+            font-weight: 800;
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.4);
         }
 
-        h1 { font-size: 22px; margin: 0 0 5px; }
-        p { color: #86868b; font-size: 14px; margin-bottom: 25px; line-height: 1.5; }
-
-        /* الأزرار */
-        .btn {
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
             display: block;
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* الأزرار الاحترافية */
+        .btn-main {
+            background: #fff;
+            color: #000;
             border: none;
+            padding: 16px;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
+        .btn-main:active { transform: scale(0.97); }
 
-        .btn-primary:active { transform: scale(0.96); }
-        .btn-primary:disabled { background: #333; cursor: not-allowed; }
-
-        .btn-outline {
-            background: transparent;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 10px;
-        }
-        
-        .btn-outline:hover {
-            border-color: var(--primary);
-            background: rgba(0, 122, 255, 0.1);
-        }
-
-        .btn-telegram {
-            background: var(--telegram);
-            color: white;
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border: 1px solid var(--glass-border);
+            padding: 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            margin-top: 10px;
         }
 
-        /* دائرة التحميل والمؤقت */
-        .loader-ring {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .timer-display {
-            display: none;
-            font-size: 15px;
-            margin-top: 15px;
-            color: #00c6ff;
-            font-weight: bold;
-        }
-
-        /* --- قسم الدعم --- */
-        .support-avatar {
-            width: 70px;
-            height: 70px;
-            background: #222;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            border: 2px solid var(--primary);
+        /* قسم الدعم */
+        .support-info {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 30px;
+            gap: 15px;
+            text-align: right;
+        }
+
+        .avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            padding: 2px;
+        }
+
+        /* المؤقت */
+        .status-box {
+            margin-top: 15px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .timer-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .timer-progress {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 1s linear;
         }
 
         .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 12px;
-            color: #555;
+            margin-top: 40px;
+            font-size: 11px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .footer b { color: var(--primary); }
-
     </style>
 </head>
 <body>
 
+    <div class="glow-bg"></div>
+
     <div class="container">
         
-        <div class="card">
-            <div class="app-icon">ES</div>
-            <h1>E-Sign Hassany</h1>
-            <p>أحدث نسخة معدلة وموقعة بشهادة أرامكو<br>جاهزة للتثبيت المباشر</p>
+        <header class="header">
+            <h1>HASSANY STORE</h1>
+        </header>
+
+        <div class="glass-card">
+            <div class="app-box">ES</div>
+            <span class="card-title">E-Sign Premium</span>
+            <span class="card-desc">أحدث إصدار (4.8.2) | شهادة أرامكو النشطة</span>
             
-            <button class="btn btn-primary" id="mainBtn" onclick="startProcess()">تثبيت التطبيق الآن</button>
+            <button class="btn-main" id="installBtn" onclick="runInstaller()">تثبيت التطبيق</button>
             
-            <div class="timer-display" id="timerZone">
-                جاري التجهيز... <span id="seconds">5</span>
+            <div class="status-box" id="statusBox">
+                <span id="statusText">يتم الآن تجهيز الرابط...</span>
+                <div class="timer-bar"><div class="timer-progress" id="progressBar"></div></div>
             </div>
         </div>
 
-        <div class="card">
-            <h1>شهادة Aramco</h1>
-            <p>قم بتحميل ملفات الشهادة لربطها بالتطبيق</p>
-            
-            <a href="ضع_رابط_ملف_p12_هنا" class="btn btn-outline" download>تحميل ملف P12 📥</a>
-            <a href="ضع_رابط_ملف_mobileprovision_هنا" class="btn btn-outline" download>تحميل ملف Provision 📥</a>
+        <div class="glass-card">
+            <span class="card-title" style="font-size: 16px;">ملفات الشهادة (Aramco)</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                <a href="https://github.com/husszzzz/coomCraft/raw/refs/heads/main/Aramco%20Services%20Company.p12" class="btn-secondary">ملف P12</a>
+                <a href="https://github.com/husszzzz/coomCraft/raw/refs/heads/main/Aramco%20Services%20Company.mobileprovision" class="btn-secondary">البروفايجن</a>
+            </div>
         </div>
 
-        <div class="card">
-            <div class="support-avatar">👨🏻‍💻</div>
-            <h1>حسين الحسني</h1>
-            <p>المطور والمسؤول عن المتجر والتحديثات</p>
-            
-            <a href="https://t.me/Om_G9" target="_blank" class="btn btn-telegram">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.12.03-1.96 1.25-5.54 3.67-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.81-.27-1.46-.42-1.4-.88.03-.24.36-.48 1-.74 3.93-1.71 6.55-2.84 7.87-3.39 3.74-1.56 4.51-1.83 5.01-1.84.11 0 .36.03.49.15.11.1.15.24.13.34z"/>
-                </svg>
-                تواصل معي على تيليجرام
-            </a>
+        <div class="glass-card" style="padding: 15px 25px;">
+            <div class="support-info">
+                <div style="font-size: 24px;">👨🏻‍💻</div>
+                <div style="flex: 1;">
+                    <span style="font-weight: 700; display: block;">حسين الحسني</span>
+                    <span style="font-size: 12px; color: #777;">@Om_G9 | دعم فني مباشر</span>
+                </div>
+                <a href="https://t.me/Om_G9" style="color: var(--accent); text-decoration: none; font-weight: bold;">تواصل</a>
+            </div>
         </div>
 
         <div class="footer">
-            Developed by <b>HASSANY</b> &copy; 2026
+            Built by <b>Hassany</b> &bull; 2026
         </div>
     </div>
 
-    <audio id="downloadSound">
-        <source src="https://www.soundjay.com/buttons/sounds/button-3.mp3" type="audio/mpeg">
+    <audio id="clickSound">
+        <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        function startProcess() {
-            const btn = document.getElementById('mainBtn');
-            const timerZone = document.getElementById('timerZone');
-            const secondsSpan = document.getElementById('seconds');
-            const sound = document.getElementById('downloadSound');
-            let count = 5;
-
-            // تغيير حالة الزر
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loader-ring" style="display:block"></div>';
-            timerZone.style.display = 'block';
-
-            // تشغيل الصوت
-            sound.play().catch(e => console.log("الصوت يحتاج تفاعل المستخدم أولاً"));
-
-            // المؤقت
-            const countdown = setInterval(() => {
-                count--;
-                secondsSpan.innerText = count;
-
-                if (count <= 0) {
-                    clearInterval(countdown);
-                    executeDownload();
+        function runInstaller() {
+            const btn = document.getElementById('installBtn');
+            const statusBox = document.getElementById('statusBox');
+            const progress = document.getElementById('progressBar');
+            const statusText = document.getElementById('statusText');
+            const sound = document.getElementById('clickSound');
+            
+            sound.play();
+            btn.style.display = 'none';
+            statusBox.style.display = 'block';
+            
+            let width = 0;
+            const interval = setInterval(() => {
+                width += 20;
+                progress.style.width = width + '%';
+                
+                if (width >= 100) {
+                    clearInterval(interval);
+                    statusText.innerText = "جاري فتح طلب التثبيت...";
+                    setTimeout(() => {
+                        window.location.href = "itms-services://?action=download-manifest&url=https://github.com/sanjivanikaluste1-ctrl/ipa-host/releases/download/v11/87d33a6a-e96b-41aa-ada9-4eb15c5d1e38.plist";
+                        statusText.innerText = "افحص الشاشة الرئيسية الآن ✅";
+                    }, 500);
                 }
             }, 1000);
-        }
-
-        function executeDownload() {
-            const btn = document.getElementById('mainBtn');
-            const timerZone = document.getElementById('timerZone');
-            
-            // رابط التثبيت المباشر
-            const installUrl = "itms-services://?action=download-manifest&url=https://github.com/sanjivanikaluste1-ctrl/ipa-host/releases/download/v11/87d33a6a-e96b-41aa-ada9-4eb15c5d1e38.plist";
-            
-            window.location.href = installUrl;
-
-            // إعادة الزر لشكله
-            btn.innerHTML = "بدأ التثبيت...";
-            timerZone.innerHTML = "افحص الشاشة الرئيسية الآن ✅";
         }
     </script>
 </body>
