@@ -3,455 +3,491 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم النظام الملكي | Hassany Store</title>
+    <title>HiPA Hassany - لوحة التحكم الملكية</title>
     
-    <!-- المكتبات الخارجية القوية -->
+    <!-- مكتبات خارجية -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
-    <!-- تصميمات CSS مخصصة (تأثيرات نيون، زجاج، حركات) -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        /* الخطوط والأساسيات */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
         
+        :root {
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.5);
+            --bg-color: #050510;
+        }
+
         body {
-            font-family: 'Cairo', sans-serif;
-            background: radial-gradient(circle at top right, #0f172a, #020617, #000000);
-            color: #e2e8f0;
-            min-height: 100vh;
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: #ffffff;
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
 
-        /* تأثير الزجاج الاحترافي */
+        /* خلفية الجزيئات المتحركة */
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* تأثير الزجاج العميق */
         .glass-panel {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(20, 20, 35, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border-radius: 24px;
         }
 
-        /* شريط التمرير مخصص */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #2563eb; }
-
-        /* تأثير النيون للبطاقات */
-        .neon-border:hover {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-            border-color: rgba(59, 130, 246, 0.8);
-            transform: translateY(-5px);
-            transition: all 0.3s ease;
-        }
-
-        /* صفوف الجدول */
-        .table-row { transition: all 0.2s; cursor: pointer; }
-        .table-row:hover { background-color: rgba(59, 130, 246, 0.1); transform: scale(1.01); }
-
-        /* تصميم وثيقة الضمان (يظل مخفياً ويستخدم للتصوير فقط) */
-        #warrantyCardWrapper {
-            position: absolute;
-            left: -9999px;
-            top: -9999px;
-            width: 800px;
-            height: 1100px; /* مقاس A4 تقريباً */
-            background: url('https://www.transparenttextures.com/patterns/stardust.png'), linear-gradient(135deg, #020617, #1e1b4b);
-            color: white;
-            padding: 50px;
-            box-sizing: border-box;
-            border: 4px solid #fbbf24;
-            border-radius: 20px;
-            box-shadow: inset 0 0 50px rgba(251, 191, 36, 0.2);
+        /* تأثيرات النيون */
+        .neon-text {
+            text-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow);
         }
         
-        .gold-gradient {
-            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .neon-border:hover {
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+            border-color: #4f46e5;
+            transform: translateY(-5px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* تأثير تحميل الصفحة */
+        /* الجدول والتمرير */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 10px; }
+        
+        .table-row { transition: all 0.3s ease; }
+        .table-row:hover { background-color: rgba(79, 70, 229, 0.15); }
+
+        /* شاشة التحميل (Loader) */
         #loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #020617; z-index: 9999;
-            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            position: fixed; inset: 0; background: #050510; z-index: 99999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .spinner {
-            width: 60px; height: 60px; border: 5px solid rgba(59,130,246,0.3);
-            border-radius: 50%; border-top-color: #3b82f6; animation: spin 1s ease-in-out infinite;
+        .loader-logo { width: 150px; animation: pulseGlow 2s infinite; }
+        @keyframes pulseGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(79,70,229,0.2)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 25px rgba(79,70,229,0.8)); transform: scale(1.05); }
+            100% { filter: drop-shadow(0 0 10px rgba(79,70,229,0.2)); transform: scale(1); }
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ======================================================== */
+        /* تصميم وثيقة الضمان - مصمم بصرامة لمنع تداخل الحروف العربية */
+        /* ======================================================== */
+        #hidden-warranty-container {
+            position: fixed;
+            top: -20000px; /* إخفاء خارج الشاشة */
+            left: 0;
+            z-index: -1000;
+        }
+
+        .warranty-print-card {
+            width: 900px;
+            height: 1200px;
+            background: linear-gradient(135deg, #0a0a1a, #11112b);
+            color: white;
+            padding: 60px;
+            box-sizing: border-box;
+            position: relative;
+            border: 6px solid;
+            border-image: linear-gradient(to bottom right, #4f46e5, #ec4899) 1;
+            font-family: Arial, Tahoma, sans-serif; /* خطوط أساسية تمنع التقطيع */
+            direction: rtl;
+            text-align: right;
+            overflow: hidden;
+        }
+
+        /* العلامة المائية לשعار HiPA */
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            opacity: 0.05;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .w-content { position: relative; z-index: 10; }
+        .w-header { display: flex; justify-content: space-between; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 30px; margin-bottom: 40px; }
+        .w-logo { width: 180px; }
+        .w-title { font-size: 45px; font-weight: bold; color: #fff; text-shadow: 0 0 10px #4f46e5; margin: 0; padding-top: 20px;}
+        .w-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; margin-bottom: 25px; }
+        .w-label { color: #9ca3af; font-size: 22px; margin-bottom: 8px; }
+        .w-value { color: #fff; font-size: 32px; font-weight: bold; }
+        .w-udid { font-family: monospace; font-size: 24px; color: #a5b4fc; letter-spacing: 1px; word-break: break-all;}
+        
+        .w-footer { position: absolute; bottom: 60px; left: 60px; right: 60px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid rgba(255,255,255,0.1); padding-top: 30px; }
+        .w-verify-text { font-size: 20px; color: #9ca3af; line-height: 1.6;}
+        .w-code-box { background: rgba(79, 70, 229, 0.2); border: 2px dashed #4f46e5; padding: 15px 30px; border-radius: 10px; font-size: 28px; font-weight: bold; letter-spacing: 3px; color: #fff;}
+        #qrcode { background: white; padding: 10px; border-radius: 10px; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- شاشة التحميل -->
+    <!-- خلفية الجزيئات (Particles) -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- شاشة التحميل الأولية -->
     <div id="loader">
-        <div class="spinner"></div>
-        <h2 class="mt-4 text-2xl font-bold text-blue-500 animate__animated animate__pulse animate__infinite">جاري تحميل النظام الملكي...</h2>
+        <img src="image_2.png" alt="HiPA Logo" class="loader-logo mb-6" onerror="this.src='https://via.placeholder.com/150?text=HiPA+Logo'">
+        <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-500 tracking-widest">HiPA SYSTEM</h2>
+        <p class="text-gray-400 mt-2">جاري مزامنة قاعدة البيانات...</p>
     </div>
 
-    <!-- رأس الصفحة -->
-    <header class="flex justify-between items-center mb-10 animate__animated animate__fadeInDown">
-        <div>
-            <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-                <i class="fas fa-shield-halved mr-2"></i> مركز القيادة | Hassany Store
-            </h1>
-            <p class="text-gray-400 mt-2 text-sm"><i class="fas fa-circle text-green-500 text-xs animate-pulse mr-1"></i> النظام متصل ومستقر</p>
+    <!-- رأس الصفحة (Header) -->
+    <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6 relative z-10">
+        <div class="flex items-center gap-6">
+            <img src="image_2.png" alt="HiPA" class="w-24 h-24 object-contain filter drop-shadow-[0_0_15px_rgba(79,70,229,0.6)]" onerror="this.style.display='none'">
+            <div>
+                <h1 class="text-4xl md:text-5xl font-black neon-text">Hassany IPA</h1>
+                <p class="text-gray-400 mt-2 text-lg"><i class="fas fa-shield-alt text-indigo-500 mr-2"></i> لوحة التحكم وإدارة الضمانات</p>
+            </div>
         </div>
-        <button onclick="refreshData()" class="glass-panel px-6 py-3 rounded-xl hover:bg-blue-600 transition duration-300 font-bold flex items-center gap-2">
-            <i class="fas fa-sync-alt"></i> تحديث البيانات
-        </button>
+        <div class="flex gap-4">
+            <button onclick="refreshData()" class="glass-panel px-6 py-3 hover:bg-indigo-600 transition-all font-bold flex items-center gap-2">
+                <i class="fas fa-sync-alt"></i> تحديث البيانات
+            </button>
+        </div>
     </header>
 
-    <!-- الإحصائيات -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10 animate__animated animate__fadeInUp animate__delay-1s">
-        <div class="glass-panel p-6 rounded-2xl neon-border">
-            <div class="flex justify-between items-center">
-                <h3 class="text-gray-400 font-bold">إجمالي المشتركين</h3>
-                <i class="fas fa-users text-blue-500 text-2xl"></i>
+    <!-- الإحصائيات الذكية -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10 relative z-10">
+        <div class="glass-panel p-6 neon-border border-b-4 border-b-blue-500">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-gray-400 font-bold text-lg">إجمالي المشتركين</h3>
+                <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center"><i class="fas fa-users text-blue-500 text-xl"></i></div>
             </div>
-            <p class="text-4xl font-black mt-4" id="stat-total">0</p>
+            <p class="text-5xl font-black" id="stat-total">0</p>
         </div>
-        <div class="glass-panel p-6 rounded-2xl neon-border">
-            <div class="flex justify-between items-center">
-                <h3 class="text-gray-400 font-bold">الشهادات الفعالة</h3>
-                <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+        <div class="glass-panel p-6 neon-border border-b-4 border-b-green-500">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-gray-400 font-bold text-lg">الضمانات الفعالة</h3>
+                <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center"><i class="fas fa-check-shield text-green-500 text-xl"></i></div>
             </div>
-            <p class="text-4xl font-black mt-4 text-green-400" id="stat-active">0</p>
+            <p class="text-5xl font-black text-green-400" id="stat-active">0</p>
         </div>
-        <div class="glass-panel p-6 rounded-2xl neon-border">
-            <div class="flex justify-between items-center">
-                <h3 class="text-gray-400 font-bold">تحذير الحظر</h3>
-                <i class="fas fa-ban text-red-500 text-2xl"></i>
+        <div class="glass-panel p-6 neon-border border-b-4 border-b-yellow-500">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-gray-400 font-bold text-lg">باقات الـ VIP</h3>
+                <div class="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center"><i class="fas fa-crown text-yellow-500 text-xl"></i></div>
             </div>
-            <p class="text-4xl font-black mt-4 text-red-400" id="stat-revoked">0</p>
+            <p class="text-5xl font-black text-yellow-400" id="stat-vip">0</p>
         </div>
-        <div class="glass-panel p-6 rounded-2xl neon-border" style="border-bottom: 2px solid #fbbf24;">
-            <div class="flex justify-between items-center">
-                <h3 class="text-gray-400 font-bold">الباقات الملكية (سنة)</h3>
-                <i class="fas fa-crown text-yellow-500 text-2xl"></i>
+        <div class="glass-panel p-6 neon-border border-b-4 border-b-purple-500 cursor-pointer" onclick="document.getElementById('searchInput').focus()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-gray-400 font-bold text-lg">نظام التحقق</h3>
+                <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center"><i class="fas fa-search-location text-purple-500 text-xl"></i></div>
             </div>
-            <p class="text-4xl font-black mt-4 text-yellow-500" id="stat-vip">0</p>
+            <p class="text-lg font-bold text-gray-300 mt-2">ابحث برمز الضمان للتحقق من الموثوقية</p>
         </div>
     </div>
 
-    <!-- قسم البحث والجدول -->
-    <div class="glass-panel rounded-3xl p-8 animate__animated animate__zoomIn animate__delay-2s">
+    <!-- منطقة البحث والجدول -->
+    <div class="glass-panel p-8 relative z-10">
         
-        <!-- شريط البحث -->
+        <!-- شريط البحث السريع -->
         <div class="relative mb-8">
-            <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
-            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="ابحث بالاسم، الباقة، أو رقم الـ UDID..." 
-                   class="w-full bg-gray-900 border border-gray-700 rounded-2xl py-4 pr-12 pl-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all text-lg">
+            <div class="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none">
+                <i class="fas fa-fingerprint text-indigo-500 text-2xl"></i>
+            </div>
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="ابحث بالاسم، UDID، أو أدخل [رمز الضمان] للتحقق..." 
+                   class="w-full bg-[#0a0a1a] border-2 border-indigo-500/30 rounded-2xl py-5 pr-16 pl-6 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20 transition-all text-xl shadow-[0_0_15px_rgba(79,70,229,0.1)]">
         </div>
 
-        <!-- الجدول الاحترافي -->
+        <!-- الجدول -->
         <div class="overflow-x-auto rounded-xl border border-gray-800">
-            <table class="w-full text-right border-collapse" id="dataTable">
+            <table class="w-full text-right border-collapse">
                 <thead>
-                    <tr class="bg-gray-900 text-gray-300 text-sm uppercase tracking-wider">
-                        <th class="p-5 font-bold border-b border-gray-800">الاسم</th>
-                        <th class="p-5 font-bold border-b border-gray-800">UDID</th>
-                        <th class="p-5 font-bold border-b border-gray-800">الباقة</th>
-                        <th class="p-5 font-bold border-b border-gray-800">انتهاء الضمان</th>
-                        <th class="p-5 font-bold border-b border-gray-800 text-center">التفاصيل والوثيقة</th>
+                    <tr class="bg-[#0a0a1a] text-gray-400 text-sm uppercase tracking-wider">
+                        <th class="p-5 font-bold border-b border-gray-800">الاسم / المشترك</th>
+                        <th class="p-5 font-bold border-b border-gray-800">الـ UDID</th>
+                        <th class="p-5 font-bold border-b border-gray-800">نوع الباقة</th>
+                        <th class="p-5 font-bold border-b border-gray-800">رمز التحقق (الضمان)</th>
+                        <th class="p-5 font-bold border-b border-gray-800 text-center">الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <!-- سيتم حقن البيانات هنا -->
+                    <!-- البيانات تُحقن هنا -->
                 </tbody>
             </table>
         </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- نافذة تفاصيل المشترك (Modal) - مخفية برمجياً -->
+    <!-- القالب المخفي لاستخراج وثيقة الضمان (الصورة) -->
     <!-- ========================================== -->
-    <div id="userModal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="glass-panel w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
-            
-            <!-- رأس النافذة -->
-            <div class="bg-gradient-to-r from-blue-900 to-gray-900 p-6 flex justify-between items-center border-b border-gray-700">
-                <h2 class="text-2xl font-bold flex items-center gap-3"><i class="fas fa-user-astronaut text-blue-400"></i> ملف المشترك</h2>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 text-2xl transition"><i class="fas fa-times-circle"></i></button>
-            </div>
-            
-            <!-- جسم النافذة (التفاصيل) -->
-            <div class="p-8 space-y-6">
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                        <p class="text-gray-400 text-sm mb-1">الاسم الكامل</p>
-                        <p class="text-xl font-bold" id="m-name">-</p>
+    <div id="hidden-warranty-container">
+        <div id="warrantyPrintArea" class="warranty-print-card">
+            <img src="image_2.png" class="watermark" alt="watermark">
+            <div class="w-content">
+                <div class="w-header">
+                    <div>
+                        <h1 class="w-title">وثيقـة ضمـان رسـميـة</h1>
+                        <p style="color:#a5b4fc; font-size: 22px; margin-top: 10px;">HASSANY IPA STORE</p>
                     </div>
-                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                        <p class="text-gray-400 text-sm mb-1">نوع الباقة</p>
-                        <p class="text-xl font-bold text-yellow-400" id="m-package">-</p>
+                    <img src="image_2.png" class="w-logo" alt="Logo">
+                </div>
+
+                <div class="w-row">
+                    <p class="w-label">اسم المشترك:</p>
+                    <p class="w-value" id="print-name">-</p>
+                </div>
+                
+                <div class="w-row">
+                    <p class="w-label">الرقم التعريفي للجهاز (UDID):</p>
+                    <p class="w-udid" id="print-udid">-</p>
+                </div>
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="w-row" style="flex: 1; border-color: #fbbf24; background: rgba(251, 191, 36, 0.05);">
+                        <p class="w-label" style="color: #fbbf24;">نوع الباقة:</p>
+                        <p class="w-value" id="print-package" style="color: #fbbf24;">-</p>
                     </div>
-                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 col-span-2">
-                        <p class="text-gray-400 text-sm mb-1 flex justify-between">
-                            <span>رقم الجهاز (UDID)</span>
-                            <button onclick="copyUdid()" class="text-blue-400 hover:text-white"><i class="fas fa-copy"></i> نسخ</button>
+                    <div class="w-row" style="flex: 1; border-color: #10b981; background: rgba(16, 185, 129, 0.05);">
+                        <p class="w-label" style="color: #10b981;">تاريخ انتهاء الضمان:</p>
+                        <p class="w-value" id="print-end" style="color: #10b981;">-</p>
+                    </div>
+                </div>
+
+                <div class="w-footer">
+                    <div>
+                        <p class="w-label" style="color: #fff;">رقم التحقق (ID الضمان):</p>
+                        <div class="w-code-box" id="print-code">HIPA-XXXX-YYYY</div>
+                        <p class="w-verify-text" style="margin-top: 15px;">
+                            * هذه الوثيقة معتمدة ومسجلة في قواعد بيانات المتجر.<br>
+                            * يرجى الاحتفاظ برمز التحقق لضمان حقك في التعويض.
                         </p>
-                        <p class="text-lg font-mono text-gray-300 break-all" id="m-udid">-</p>
                     </div>
-                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                        <p class="text-gray-400 text-sm mb-1">تاريخ الاشتراك</p>
-                        <p class="text-lg font-bold text-gray-200" id="m-start">-</p>
-                    </div>
-                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                        <p class="text-gray-400 text-sm mb-1">تاريخ انتهاء الضمان</p>
-                        <p class="text-lg font-bold text-green-400" id="m-end">-</p>
-                    </div>
+                    <div id="qrcode"></div> <!-- سيتم توليد الـ QR هنا -->
                 </div>
-
-                <!-- زر تحميل الوثيقة -->
-                <button onclick="generateWarranty()" class="w-full mt-6 bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-500 hover:to-yellow-300 text-black font-black text-xl py-4 rounded-2xl shadow-[0_0_20px_rgba(251,191,36,0.4)] transition-all transform hover:scale-[1.02] flex justify-center items-center gap-3">
-                    <i class="fas fa-file-contract text-2xl"></i> استخراج وتحميل وثيقة الضمان
-                </button>
             </div>
         </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- تصميم الوثيقة الملكية (يستخدم كقالب للصورة) -->
-    <!-- ========================================== -->
-    <div id="warrantyCardWrapper">
-        <div class="text-center border-b-2 border-gray-700 pb-10 mb-10">
-            <i class="fas fa-gem text-6xl text-yellow-500 mb-6"></i>
-            <h1 class="text-6xl font-black gold-gradient tracking-wider mb-4">وثيقة ضمان واشتراك</h1>
-            <p class="text-2xl text-gray-300 tracking-widest">HASSANY VIP STORE</p>
-        </div>
-        
-        <div class="space-y-10 text-3xl leading-relaxed">
-            <div class="bg-gray-900 bg-opacity-50 p-6 rounded-2xl border border-gray-700">
-                <p class="text-gray-400 text-xl mb-2">معلومات العميل:</p>
-                <p class="font-bold text-white"><i class="fas fa-user text-blue-400 mr-3"></i>الاسم: <span id="w-name" class="ml-2"></span></p>
-            </div>
-            
-            <div class="bg-gray-900 bg-opacity-50 p-6 rounded-2xl border border-gray-700">
-                <p class="text-gray-400 text-xl mb-2">معلومات الجهاز:</p>
-                <p class="font-mono text-2xl text-gray-300 break-all"><i class="fas fa-mobile-alt text-purple-400 mr-3"></i>UDID: <span id="w-udid" class="ml-2"></span></p>
-            </div>
-
-            <div class="bg-gray-900 bg-opacity-50 p-6 rounded-2xl border border-yellow-600 shadow-[0_0_15px_rgba(251,191,36,0.2)]">
-                <p class="text-gray-400 text-xl mb-2">تفاصيل الباقة:</p>
-                <p class="font-black text-yellow-400 text-4xl mb-4"><i class="fas fa-crown mr-3"></i><span id="w-package"></span></p>
-                <div class="flex justify-between text-2xl border-t border-gray-700 pt-4 mt-4">
-                    <p><span class="text-gray-400">تاريخ البدء:</span> <span id="w-start" class="text-white"></span></p>
-                    <p><span class="text-gray-400">انتهاء الضمان:</span> <span id="w-end" class="text-green-400 font-bold"></span></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="absolute bottom-10 left-10 right-10 text-center border-t-2 border-gray-700 pt-8 mt-10">
-            <p class="text-xl text-gray-400 mb-2">هذه الوثيقة إلكترونية وموثقة رسمياً في قاعدة بيانات المتجر.</p>
-            <p class="text-lg text-yellow-500 font-bold">تضمن لك هذه الباقة التعويض الفوري في حال حدوث أي توقف خلال فترة الضمان.</p>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- سكربتات البرمجة والمنطق (JavaScript) -->
+    <!-- سكربتات البرمجة (المنطق، التوليد، الجزيئات) -->
     <!-- ========================================== -->
     <script>
-        // ⚠️⚠️ ضع رابط الـ Web App الخاص بك من Google Apps Script هنا ⚠️⚠️
-        const API_URL = "ضع_الرابط_هنا"; 
+        // ⚠️⚠️⚠️ ركز هنا يا حساني ⚠️⚠️⚠️
+        // ضع رابط الـ Web App الخاص بك من Google Apps Script بين علامتي التنصيص أسفله:
+        const API_URL = "ضع_رابط_جوجل_سكربت_هنا"; 
 
-        // بيانات تجريبية (Fallback) في حال لم تضع الرابط بعد
-        let globalData = [
-            { "الاسم": "حسن العراقي", "UDID": "00008101-001C2D3E4F5A6B7C", "الباقة": "الباقة السوبر VIP (ضمان سنة)", "تاريخ_الاشتراك": "2026-06-18", "تاريخ_الانتهاء": "2027-06-18", "الحالة": "فعال" },
-            { "الاسم": "علي الجيمر", "UDID": "00008120-002E3D4C5B6A7F8E", "الباقة": "الباقة النارية (ضمان شهرين)", "تاريخ_الاشتراك": "2026-06-18", "تاريخ_الانتهاء": "2026-08-18", "الحالة": "فعال" }
-        ];
+        let globalData = [];
 
-        let selectedUser = null;
+        // دالة توليد "رمز ضمان" عشوائي ثابت بناءً على الـ UDID لتستطيع البحث عنه لاحقاً
+        function generateWarrantyCode(udid, date) {
+            if (!udid) return "HIPA-UNKNOWN";
+            // نأخذ أول 4 وآخر 4 حروف من الـ UDID لعمل رمز فريد
+            let cleanUdid = udid.replace(/[^a-zA-Z0-9]/g, '');
+            let part1 = cleanUdid.substring(0, 4).toUpperCase();
+            let part2 = cleanUdid.substring(cleanUdid.length - 4).toUpperCase();
+            let year = date ? date.substring(0, 4) : "2026";
+            return `HIPA-${part1}${part2}-${year}`;
+        }
 
-        // دالة جلب البيانات من جوجل
+        // جلب البيانات
         async function refreshData() {
             try {
-                if (API_URL === "ضع_الرابط_هنا") {
-                    console.log("يتم استخدام البيانات التجريبية، يرجى وضع رابط الـ API الحقيقي.");
-                    renderTable(globalData);
-                    document.getElementById('loader').style.display = 'none';
-                    return;
+                if(API_URL === "ضع_رابط_جوجل_سكربت_هنا") {
+                    console.warn("لم تقم بربط قاعدة البيانات بعد! يتم عرض بيانات تجريبية.");
+                    globalData = [
+                        { "الاسم": "حسن العراقي", "UDID": "00008101-001C2D3E4F5A6B7C", "الباقة": "السوبر VIP (سنة)", "تاريخ_الاشتراك": "2026-06-18", "تاريخ_الانتهاء": "2027-06-18", "الحالة": "فعال" },
+                        { "الاسم": "علي الجيمر", "UDID": "F8A9B2C3D4E5F6G7H8I9J0", "الباقة": "النارية (شهرين)", "تاريخ_الاشتراك": "2026-05-10", "تاريخ_الانتهاء": "2026-07-10", "الحالة": "فعال" }
+                    ];
+                } else {
+                    Swal.fire({ title: 'جاري التحديث...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+                    const response = await fetch(API_URL);
+                    globalData = await response.json();
+                    Swal.close();
                 }
 
-                document.getElementById('loader').style.display = 'flex';
-                
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                globalData = data;
-                
-                renderTable(globalData);
-                document.getElementById('loader').style.display = 'none';
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'تم التحديث!',
-                    text: 'تم سحب أحدث البيانات من قاعدة البيانات بنجاح.',
-                    background: '#1e293b', color: '#fff', confirmButtonColor: '#3b82f6'
+                // معالجة البيانات وإضافة رمز الضمان لكل مستخدم إذا لم يكن موجوداً
+                globalData = globalData.map(user => {
+                    user.warrantyCode = generateWarrantyCode(user["UDID"], user["تاريخ_الاشتراك"]);
+                    return user;
                 });
 
+                renderTable(globalData);
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500);
+
             } catch (error) {
+                Swal.fire('خطأ!', 'فشل الاتصال بقاعدة البيانات. تأكد من رابط الـ API.', 'error');
                 document.getElementById('loader').style.display = 'none';
-                Swal.fire({
-                    icon: 'error',
-                    title: 'خطأ في الاتصال',
-                    text: 'يرجى التأكد من رابط الـ Web App الخاص بـ Google Sheets.',
-                    background: '#1e293b', color: '#fff', confirmButtonColor: '#ef4444'
-                });
             }
         }
 
-        // دالة عرض الجدول وبناء الإحصائيات
+        // عرض الجدول
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
-            
             let vipCount = 0;
             
             data.forEach((user, index) => {
-                // حساب الإحصائيات
-                if(user["الباقة"] && user["الباقة"].includes("سنة") || user["الباقة"].includes("VIP")) vipCount++;
-
-                // أيقونة الباقة بناءً على الاسم
-                let icon = '<i class="fas fa-box text-gray-400 ml-2"></i>';
-                if(user["الباقة"].includes("VIP")) icon = '<i class="fas fa-crown text-yellow-500 ml-2"></i>';
-                else if(user["الباقة"].includes("نار")) icon = '<i class="fas fa-fire text-orange-500 ml-2"></i>';
+                let pack = user["الباقة"] || '';
+                if(pack.includes("سنة") || pack.includes("VIP")) vipCount++;
                 
-                // تصميم الصف
+                let wCode = user.warrantyCode;
+
                 const row = document.createElement('tr');
-                row.className = 'table-row border-b border-gray-800';
+                row.className = 'table-row border-b border-gray-800/50';
                 row.innerHTML = `
-                    <td class="p-5 font-bold text-lg">${user["الاسم"] || 'بدون اسم'}</td>
-                    <td class="p-5 font-mono text-sm text-gray-400">${user["UDID"] || 'N/A'}</td>
-                    <td class="p-5 font-bold">${icon} ${user["الباقة"] || 'غير محدد'}</td>
-                    <td class="p-5 text-green-400 font-bold">${user["تاريخ_الانتهاء"] || '-'}</td>
+                    <td class="p-5 font-bold text-lg flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400"><i class="fas fa-user"></i></div>
+                        ${user["الاسم"] || 'بدون اسم'}
+                    </td>
+                    <td class="p-5 font-mono text-sm text-gray-400 max-w-xs truncate" title="${user["UDID"]}">${user["UDID"]}</td>
+                    <td class="p-5 font-bold text-yellow-400">${pack}</td>
+                    <td class="p-5">
+                        <span class="bg-purple-500/10 text-purple-400 border border-purple-500/30 px-3 py-1 rounded-lg font-mono text-sm shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                            <i class="fas fa-fingerprint mr-1"></i> ${wCode}
+                        </span>
+                    </td>
                     <td class="p-5 text-center">
-                        <button onclick="openModal(${index})" class="bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white px-6 py-2 rounded-xl font-bold transition duration-300 border border-blue-600/30 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
-                            <i class="fas fa-eye ml-2"></i> عرض وإصدار
+                        <button onclick="exportWarranty(${index})" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-5 py-2 rounded-xl font-bold shadow-lg transform hover:scale-105 transition-all">
+                            <i class="fas fa-file-download ml-2"></i> استخراج الوثيقة
                         </button>
                     </td>
                 `;
                 tbody.appendChild(row);
             });
 
-            // تحديث الإحصائيات العلوية
             document.getElementById('stat-total').innerText = data.length;
-            document.getElementById('stat-active').innerText = data.filter(u => u["الحالة"] === "فعال" || u["الحالة"] == null).length;
+            document.getElementById('stat-active').innerText = data.filter(u => u["الحالة"] !== "منتهي").length;
             document.getElementById('stat-vip').innerText = vipCount;
         }
 
-        // دالة الفلترة والبحث السريع
+        // البحث (يفلتر بالاسم أو الـ UDID أو رمز الضمان)
         function filterTable() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filteredData = globalData.filter(user => {
-                const name = (user["الاسم"] || "").toLowerCase();
-                const udid = (user["UDID"] || "").toLowerCase();
-                const pack = (user["الباقة"] || "").toLowerCase();
-                return name.includes(query) || udid.includes(query) || pack.includes(query);
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filtered = globalData.filter(user => {
+                const searchString = `${user["الاسم"]} ${user["UDID"]} ${user["الباقة"]} ${user.warrantyCode}`.toLowerCase();
+                return searchString.includes(query);
             });
-            renderTable(filteredData);
-        }
-
-        // -----------------------------------------
-        // دوال النافذة المنبثقة (Modal) والوثيقة
-        // -----------------------------------------
-        
-        const modal = document.getElementById('userModal');
-        const modalContent = document.getElementById('modalContent');
-
-        function openModal(index) {
-            selectedUser = globalData[index];
+            renderTable(filtered);
             
-            // تعبئة البيانات في النافذة
-            document.getElementById('m-name').innerText = selectedUser["الاسم"] || '-';
-            document.getElementById('m-udid').innerText = selectedUser["UDID"] || '-';
-            document.getElementById('m-package').innerText = selectedUser["الباقة"] || '-';
-            document.getElementById('m-start').innerText = selectedUser["تاريخ_الاشتراك"] || '-';
-            document.getElementById('m-end').innerText = selectedUser["تاريخ_الانتهاء"] || '-';
-
-            // إظهار النافذة بحركة أنيقة
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modalContent.classList.remove('scale-95');
-            }, 10);
+            // إذا كان البحث برمز الضمان ووجد نتيجة واحدة، نعطيه تأثير أنه "تم التحقق"
+            if(query.startsWith("hipa-") && filtered.length === 1) {
+                document.getElementById('searchInput').style.borderColor = "#10b981"; // أخضر
+            } else {
+                document.getElementById('searchInput').style.borderColor = ""; 
+            }
         }
 
-        function closeModal() {
-            modal.classList.add('opacity-0');
-            modalContent.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                selectedUser = null;
-            }, 300);
-        }
+        // -------------------------------------------------------------
+        // نظام استخراج الصورة الاحترافي (بدون مشاكل تقطيع الخط)
+        // -------------------------------------------------------------
+        let qrCodeObj = null;
 
-        function copyUdid() {
-            navigator.clipboard.writeText(selectedUser["UDID"]);
+        function exportWarranty(index) {
+            const user = globalData[index];
+            
             Swal.fire({
-                toast: true, position: 'top-end', icon: 'success', title: 'تم نسخ الـ UDID',
-                showConfirmButton: false, timer: 2000, background: '#1e293b', color: '#fff'
-            });
-        }
-
-        // الدالة الأقوى: استخراج الصورة بجودة عالية
-        function generateWarranty() {
-            if (!selectedUser) return;
-
-            // إظهار رسالة تحميل
-            Swal.fire({
-                title: 'جاري إصدار الوثيقة الملكية...',
-                html: 'يرجى الانتظار لحين معالجة الصورة عالية الدقة.',
+                title: 'جاري صياغة الوثيقة...',
+                html: 'يتم الآن تجميع البيانات ودمج العلامة المائية وتوليد الـ QR Code...',
                 allowOutsideClick: false,
-                background: '#1e293b', color: '#fff',
+                background: '#11112b', color: '#fff',
                 didOpen: () => { Swal.showLoading(); }
             });
 
-            // تعبئة بيانات قالب الصورة المخفي
-            document.getElementById('w-name').innerText = selectedUser["الاسم"];
-            document.getElementById('w-udid').innerText = selectedUser["UDID"];
-            document.getElementById('w-package').innerText = selectedUser["الباقة"];
-            document.getElementById('w-start').innerText = selectedUser["تاريخ_الاشتراك"];
-            document.getElementById('w-end').innerText = selectedUser["تاريخ_الانتهاء"];
+            // تعبئة البيانات في القالب
+            document.getElementById('print-name').innerText = user["الاسم"];
+            document.getElementById('print-udid').innerText = user["UDID"];
+            document.getElementById('print-package').innerText = user["الباقة"];
+            document.getElementById('print-end').innerText = user["تاريخ_الانتهاء"];
+            document.getElementById('print-code').innerText = user.warrantyCode;
 
-            const card = document.getElementById('warrantyCardWrapper');
-            
-            // إظهار العنصر مؤقتاً للتصوير
-            card.style.left = "0px";
-            card.style.top = "0px";
-            card.style.zIndex = "-100";
-
-            // استخدام إعدادات احترافية للتصوير (Scale: 3 تعني جودة 3x)
-            html2canvas(card, { 
-                scale: 3, 
-                useCORS: true, 
-                backgroundColor: null 
-            }).then(canvas => {
-                // إخفاء القالب مجدداً
-                card.style.left = "-9999px";
-                card.style.top = "-9999px";
-
-                // تحميل الصورة للمستخدم
-                let link = document.createElement('a');
-                link.download = `ضمان_VIP_${selectedUser["الاسم"]}.png`;
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-
-                // رسالة نجاح
-                Swal.fire({
-                    icon: 'success',
-                    title: 'تم إصدار الوثيقة!',
-                    text: 'تم تحميل صورة الضمان بنجاح وبأعلى جودة.',
-                    background: '#1e293b', color: '#fff', confirmButtonColor: '#fbbf24'
-                });
+            // توليد QR Code يحتوي على رمز الضمان ليتأكد الزبون
+            document.getElementById('qrcode').innerHTML = "";
+            new QRCode(document.getElementById("qrcode"), {
+                text: "HiPA Verify: " + user.warrantyCode,
+                width: 100, height: 100,
+                colorDark : "#0a0a1a", colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
             });
+
+            // إعطاء المتصفح لحظة لرسم الـ QR Code قبل التصوير
+            setTimeout(() => {
+                const printArea = document.getElementById('warrantyPrintArea');
+                
+                // إعدادات html2canvas معدلة للغة العربية والجودة العالية
+                html2canvas(printArea, {
+                    scale: 2, // جودة مضاعفة
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: "#0a0a1a",
+                    logging: false
+                }).then(canvas => {
+                    let link = document.createElement('a');
+                    link.download = `HiPA_Warranty_${user.warrantyCode}.png`;
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'تم إصدار الوثيقة بنجاح!',
+                        text: 'تم حفظ الصورة في جهازك. الرمز محمي بـ QR Code.',
+                        background: '#11112b', color: '#fff', confirmButtonColor: '#4f46e5'
+                    });
+                }).catch(err => {
+                    Swal.fire('خطأ!', 'حدثت مشكلة أثناء تجميع الصورة.', 'error');
+                });
+            }, 800);
         }
 
-        // تشغيل مبدئي
+        // -------------------------------------------------------------
+        // خلفية الجزيئات (Canvas Particles) لإعطاء طابع برمجي فخم
+        // -------------------------------------------------------------
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let particlesArray = [];
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if(this.x > canvas.width) this.x = 0; else if(this.x < 0) this.x = canvas.width;
+                if(this.y > canvas.height) this.y = 0; else if(this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(79, 70, 229, 0.3)';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+        function initParticles() {
+            particlesArray = [];
+            for (let i = 0; i < 100; i++) particlesArray.push(new Particle());
+        }
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update(); particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initParticles(); });
+        
+        initParticles(); animateParticles();
+
+        // التشغيل المبدئي
         window.onload = refreshData;
     </script>
 </body>
