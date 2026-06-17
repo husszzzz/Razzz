@@ -2,260 +2,72 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HASSANY STORE</title>
-    <style>
-        :root {
-            --primary: #007aff;
-            --bg: #0a0a0c;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text: #ffffff;
-            --telegram: #0088cc;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        /* الإضاءة الخلفية */
-        body::before {
-            content: "";
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            background: var(--primary);
-            filter: blur(180px);
-            border-radius: 50%;
-            z-index: -1;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0.25;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 420px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        /* تصميم البطاقات الزجاجية */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        }
-
-        /* --- قسم التطبيق --- */
-        .app-icon {
-            width: 90px;
-            height: 90px;
-            background: linear-gradient(135deg, #007aff, #00c6ff);
-            border-radius: 22px;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0,122,255,0.3);
-        }
-
-        h1 { font-size: 22px; margin: 0 0 5px; }
-        p { color: #86868b; font-size: 14px; margin-bottom: 25px; line-height: 1.5; }
-
-        /* الأزرار */
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:active { transform: scale(0.96); }
-        .btn-primary:disabled { background: #333; cursor: not-allowed; }
-
-        .btn-outline {
-            background: transparent;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 10px;
-        }
-        
-        .btn-outline:hover {
-            border-color: var(--primary);
-            background: rgba(0, 122, 255, 0.1);
-        }
-
-        .btn-telegram {
-            background: var(--telegram);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        /* دائرة التحميل والمؤقت */
-        .loader-ring {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .timer-display {
-            display: none;
-            font-size: 15px;
-            margin-top: 15px;
-            color: #00c6ff;
-            font-weight: bold;
-        }
-
-        /* --- قسم الدعم --- */
-        .support-avatar {
-            width: 70px;
-            height: 70px;
-            background: #222;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            border: 2px solid var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 12px;
-            color: #555;
-        }
-        .footer b { color: var(--primary); }
-
-    </style>
+    <title>لوحة التحكم الملكية | Hassany Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>body { background-color: #050505; color: white; font-family: sans-serif; }</style>
 </head>
-<body>
+<body class="p-4">
 
-    <div class="container">
-        
-        <div class="card">
-            <div class="app-icon">ES</div>
-            <h1>E-Sign Hassany</h1>
-            <p>أحدث نسخة معدلة وموقعة بشهادة الحسني<br>جاهزة للتثبيت المباشر</p>
-            
-            <button class="btn btn-primary" id="mainBtn" onclick="startProcess()">تثبيت التطبيق الآن</button>
-            
-            <div class="timer-display" id="timerZone">
-                جاري التجهيز... <span id="seconds">5</span>
-            </div>
-        </div>
+    <!-- الجدول -->
+    <div class="overflow-x-auto bg-gray-900 p-6 rounded-2xl border border-gray-700">
+        <table class="w-full text-right" id="mainTable">
+            <thead><tr class="text-gray-400 border-b border-gray-700">
+                <th class="p-3">الاسم</th><th class="p-3">الباقة</th><th class="p-3">انتهاء الضمان</th><th class="p-3">إجراءات</th>
+            </tr></thead>
+            <tbody id="dataBody"></tbody>
+        </table>
+    </div>
 
-        <div class="card">
-            <h1>شهادة Aramco</h1>
-            <p>قم بتحميل ملفات الشهادة لربطها بالتطبيق</p>
-            
-            <a href="https://github.com/husszzzz/coomCraft/raw/refs/heads/main/Aramco%20Services%20Company.p12" class="btn btn-outline" download>تحميل ملف P12 📥</a>
-            <a href="https://github.com/husszzzz/coomCraft/raw/refs/heads/main/Aramco%20Services%20Company.mobileprovision" class="btn btn-outline" download>تحميل ملف Provision 📥</a>
-        </div>
-
-        <div class="card">
-            <div class="support-avatar">👨🏻‍💻</div>
-            <h1>حسين الحسني</h1>
-            <p>المطور والمسؤول عن المتجر والتحديثات</p>
-            
-            <a href="https://t.me/Om_G9" target="_blank" class="btn btn-telegram">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.12.03-1.96 1.25-5.54 3.67-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.81-.27-1.46-.42-1.4-.88.03-.24.36-.48 1-.74 3.93-1.71 6.55-2.84 7.87-3.39 3.74-1.56 4.51-1.83 5.01-1.84.11 0 .36.03.49.15.11.1.15.24.13.34z"/>
-                </svg>
-                تواصل معي على تيليجرام
-            </a>
-        </div>
-
-        <div class="footer">
-            Developed by <b>HASSANY</b> &copy; 2026
+    <!-- قالب الوثيقة (مخفي) -->
+    <div id="warrantyCard" class="absolute -left-[9999px] bg-gradient-to-br from-blue-900 to-black p-8 w-[600px] text-white border-2 border-yellow-500 rounded-2xl">
+        <h1 class="text-3xl font-bold text-yellow-500">وثيقة ضمان Hassany Store</h1>
+        <div class="mt-6 space-y-4 text-xl">
+            <p>اسم المشترك: <span id="valName" class="font-bold"></span></p>
+            <p>نوع الباقة: <span id="valPackage" class="text-yellow-400"></span></p>
+            <p>ضمان لغاية: <span id="valDate" class="text-green-400"></span></p>
         </div>
     </div>
 
-    <audio id="downloadSound">
-        <source src="https://www.soundjay.com/buttons/sounds/button-3.mp3" type="audio/mpeg">
-    </audio>
-
     <script>
-        function startProcess() {
-            const btn = document.getElementById('mainBtn');
-            const timerZone = document.getElementById('timerZone');
-            const secondsSpan = document.getElementById('seconds');
-            const sound = document.getElementById('downloadSound');
-            let count = 5;
+        // ضع هنا رابط Web App الذي حصلت عليه من Google Apps Script
+        const API_URL = "رابط_الـ_Web_App_الخاص_بك";
 
-            // تغيير حالة الزر
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loader-ring" style="display:block"></div>';
-            timerZone.style.display = 'block';
-
-            // تشغيل الصوت
-            sound.play().catch(e => console.log("الصوت يحتاج تفاعل المستخدم أولاً"));
-
-            // المؤقت
-            const countdown = setInterval(() => {
-                count--;
-                secondsSpan.innerText = count;
-
-                if (count <= 0) {
-                    clearInterval(countdown);
-                    executeDownload();
-                }
-            }, 1000);
+        async function loadData() {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            const tbody = document.getElementById('dataBody');
+            
+            data.forEach((item, index) => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-800">
+                        <td class="p-3">${item.الاسم}</td>
+                        <td class="p-3 text-yellow-500">${item.الباقة}</td>
+                        <td class="p-3">${item.تاريخ_الانتهاء}</td>
+                        <td class="p-3">
+                            <button onclick="downloadWarranty('${item.الاسم}', '${item.الباقة}', '${item.تاريخ_الانتهاء}')" 
+                            class="bg-blue-600 px-4 py-1 rounded">استخراج الوثيقة</button>
+                        </td>
+                    </tr>`;
+            });
         }
 
-        function executeDownload() {
-            const btn = document.getElementById('mainBtn');
-            const timerZone = document.getElementById('timerZone');
+        function downloadWarranty(name, pack, date) {
+            document.getElementById('valName').innerText = name;
+            document.getElementById('valPackage').innerText = pack;
+            document.getElementById('valDate').innerText = date;
             
-            // رابط التثبيت المباشر
-            const installUrl = "itms-services://?action=download-manifest&url=https://github.com/sanjivanikaluste1-ctrl/ipa-host/releases/download/v11/87d33a6a-e96b-41aa-ada9-4eb15c5d1e38.plist";
-            
-            window.location.href = installUrl;
-
-            // إعادة الزر لشكله
-            btn.innerHTML = "بدأ التثبيت...";
-            timerZone.innerHTML = "افحص الشاشة الرئيسية الآن ✅";
+            const card = document.getElementById('warrantyCard');
+            card.style.left = "0px";
+            html2canvas(card).then(canvas => {
+                card.style.left = "-9999px";
+                let link = document.createElement('a');
+                link.download = `ضمان_${name}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
         }
+        loadData();
     </script>
 </body>
 </html>
